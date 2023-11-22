@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/CarsList.css';
 
 const CarsList: React.FC = () => {
-  const { cars, deleteCar } = useCars();
+  const { cars, deleteCar, updateCar,viewCar } = useCars();
   const navigate = useNavigate();
 
   const handleAdd = () => {
@@ -14,7 +14,8 @@ const CarsList: React.FC = () => {
     console.log('Add button clicked');
   };
 
-  const handleUpdate = (carId: string) => {
+  const handleUpdate = (carId: string, name: string, model: string, yearOfRelease: string, brand: string, color: string) => {
+    console.log("i am in handleUpdate");
     const carToUpdate = cars.find((car) => car.id === carId);
 
     if (carToUpdate) {
@@ -30,8 +31,9 @@ const CarsList: React.FC = () => {
     console.log(`Delete button clicked for car with ID ${carId}`);
   };
 
-  const handleView = (carId: string, name: string, model: string, yearOfRelease: string, brand: string, color: string) => {
-    navigate(`/cars/view/${carId}/${name}/${model}/${yearOfRelease}/${brand}/${color}`);
+  const handleView = (carId: string) => {
+    console.log("i am in handleView")
+    navigate(`/cars/view/${carId}/`);
   };
 
   const columns: GridColDef[] = [
@@ -52,19 +54,21 @@ const CarsList: React.FC = () => {
             style={{ backgroundColor: 'Green', color: '#fff', margin: '5px' }}
             onClick={() =>
               handleView(
-                params.row.id,
-                params.row.name,
-                params.row.model,
-                params.row.yearOfRelease,
-                params.row.brand,
-                params.row.color
+                params.row.id
               )
             }
           >
             View
           </Button>
 
-          <Button variant="outlined" onClick={() => handleUpdate(params.row.id)} style={{ margin: '5px' }}>
+          <Button variant="outlined" onClick={() => handleUpdate(
+                            params.row.id,
+                            params.row.name,
+                            params.row.model,
+                            params.row.yearOfRelease,
+                            params.row.brand,
+                            params.row.color
+            )} style={{ margin: '5px' }}>
             Update
           </Button>
           <Button

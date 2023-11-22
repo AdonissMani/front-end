@@ -73,12 +73,12 @@ export function Navbar(props: NavbarProps) {
 
         <Routes>
           <Route
-            path="/cars"
+            path="/cars/*"
             element={
               
                 <Routes>
                   <Route path="/" element={<CarsList />} />
-                  <Route path="/update" element={<CarsUpdate />} />
+                  <Route path="/update/:id" element={<CarsUpdate />} />
                 </Routes>
               
             }
@@ -92,7 +92,7 @@ export function Navbar(props: NavbarProps) {
             }
           />
           <Route
-            path="/cars/view/:id/:name/:model/:yearOfRelease/:brand/:color"
+            path="/cars/view/:id"
             element={
               <TrucksProvider>
                 <CarsDetailView />

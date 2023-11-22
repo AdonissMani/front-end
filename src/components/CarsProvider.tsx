@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { v4 as uuidv4 } from 'uuid';
 
 // Interface for a Car
-interface Car {
+export interface Car {
   id : string;
   name: string;
   model: string;
@@ -15,7 +15,8 @@ interface CarContextProps {
   cars: Car[];
   deleteCar: (carId: string) => void;
   addCar: (car:Car) => void;
-  updateCar:(carId: string) => Car
+  updateCar:(updatedCar: Car) => Car |void;
+  viewCar:(carId:string) =>Car | void;
 
 }
 
@@ -38,6 +39,15 @@ export const CarProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setCars((prevCars) =>
       prevCars.map((car) => (car.id === updatedCar.id ? updatedCar : car))
     );
+    
+  };
+
+  const viewCar = (carId: string) => {
+    const car = cars.find((car) => car.id === carId);
+    if (car) {
+      console.log(`Viewing details for car with ID ${car.id}:`, car);
+      return car;
+    }
   };
 
   // Function to generate a random car object
@@ -67,9 +77,8 @@ export const CarProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
 // Provider component of CarContext is provided value
-  return <CarContext.Provider value={{cars,deleteCar,addCar,updateCar}}>{children}</CarContext.Provider>;
+  return <CarContext.Provider value={{cars,addCar,deleteCar,updateCar,viewCar}}>{children}</CarContext.Provider>;
 };
-
 // Custom hook to use the CarContext
 export const useCars = (): CarContextProps => {
   const context = useContext(CarContext);//here CarContext value is being consumed using useContext
