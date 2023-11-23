@@ -7,7 +7,7 @@ export interface Permit {
   state: string;
 }
 
-interface Truck {
+export interface Truck {
   id: string;
   name: string;
   model: string;
@@ -18,15 +18,41 @@ interface Truck {
 
 interface TrucksContextType {
   trucks: Truck[];
+  deleteTruck: (truckId: string) => void;
+  addTruck: (truck: Truck) => void;
+  updateTruck: (updated: Truck) => Truck | void;
+  viewTruck: (truckId: string) => Truck | void;
 }
 
 const TrucksContext = createContext<TrucksContextType | undefined>(undefined);
 
-export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children })=> {
+export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [trucks, setTrucks] = useState<Truck[]>([]);
 
+  const addTruck = (truck: Truck) => {
+    setTrucks((prevTrucks) => [...prevTrucks, truck]);
+  };
+
+  const deleteTruck = (truckId: string) => {
+    setTrucks((prevTrucks) => prevTrucks.filter((truck) => truck.id !== truckId));
+  };
+
+  const updateTruck = (updated: Truck) => {
+    setTrucks((prevTrucks) => prevTrucks.map((truck) => (truck.id === updated.id ? updated : truck)));
+    return updated;
+  };
+
+  const viewTruck = (truckId: string) => {
+    const truck = trucks.find((truck) => truck.id === truckId);
+    if(truck){
+      console.log(`Viewing Truck detail for ID ${truck.id}:`,truck);
+      return truck;
+    }
+
+  };
+
   const generateRandomPermit = (): Permit => {
-    const state = ['State A','State C','State B','State D']
+    const state = ['State A', 'State C', 'State B', 'State D'];
     const getRandomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
 
     return {
@@ -36,9 +62,9 @@ export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children })=
   };
 
   const generateRandomTruck = (): Truck => {
-    const name =['Name A', 'Name B', 'Name C', 'Name D', 'Name E'];
-    const model=['ModelA', 'ModelB', 'ModelC', 'ModelD', 'ModelE'];
-    const brand = ['Brand A','Brand B','Brand C'];
+    const name = ['Name A', 'Name B', 'Name C', 'Name D', 'Name E'];
+    const model = ['ModelA', 'ModelB', 'ModelC', 'ModelD', 'ModelE'];
+    const brand = ['Brand A', 'Brand B', 'Brand C'];
     const getRandomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
     const id = uuidv4();
 
@@ -59,10 +85,14 @@ export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children })=
     setTrucks(generatedTrucks);
   }, []);
 
-  return <TrucksContext.Provider value={{ trucks }}>{children}</TrucksContext.Provider>;
+  return (
+    <TrucksContext.Provider value={{ trucks, addTruck, deleteTruck, updateTruck, viewTruck }}>
+      {children}
+    </TrucksContext.Provider>
+  );
 };
 
-export const useTrucksContext = () => {
+export const useTrucksContext = ():TrucksContextType => {
   const context = useContext(TrucksContext);
   if (!context) {
     throw new Error('useTrucksContext must be used within a TrucksProvider');

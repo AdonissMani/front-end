@@ -53,9 +53,7 @@ const CarsList: React.FC = () => {
             variant="contained"
             style={{ backgroundColor: 'Green', color: '#fff', margin: '5px' }}
             onClick={() =>
-              handleView(
-                params.row.id
-              )
+              handleView(params.row.id)
             }
           >
             View

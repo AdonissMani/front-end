@@ -38,7 +38,7 @@ export function Navbar(props: NavbarProps) {
   };
 
   return (
-    <Router>
+
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
@@ -70,39 +70,7 @@ export function Navbar(props: NavbarProps) {
             <Button onClick={toggleDrawer(false)}>Close Drawer</Button>
           </div>
         </Drawer>
-
-        <Routes>
-          <Route
-            path="/cars/*"
-            element={
-              
-                <Routes>
-                  <Route path="/" element={<CarsList />} />
-                  <Route path="/update/:id" element={<CarsUpdate />} />
-                </Routes>
-              
-            }
-          />
-          <Route
-            path="/trucks"
-            element={
-              <TrucksProvider>
-                <TrucksList />
-              </TrucksProvider>
-            }
-          />
-          <Route
-            path="/cars/view/:id"
-            element={
-              <TrucksProvider>
-                <CarsDetailView />
-              </TrucksProvider>
-            }
-          />
-          <Route path="/cars/create" element={<CarsCreate />} />
-        </Routes>
       </Box>
-    </Router>
   );
 }
 

@@ -92,6 +92,7 @@ const CarDetailView: React.FC = () => {
         backgroundColor: '#1976d2',
         // Adjust the zIndex as needed
       }}
+      
     >
       <h2>{`Edit Car Details ${id}`}</h2>
       <form onSubmit={handleSubmit(onSubmit)}>

@@ -4,8 +4,13 @@ import { useCars } from './CarsProvider';
 import '../styles/CarsList.css';
 
 const CarDetailView: React.FC = () => {
+  // Extracting the 'id' parameter from the URL using useParams
   const { id } = useParams<{ id: string | undefined }>();
+
+  // Using the useCars hook to get access to the cars context and viewCar function
   const { viewCar } = useCars();
+
+  // State to hold the details of the car being viewed
   const [carDetails, setCarDetails] = useState<{
     name: string;
     model: string;
@@ -14,13 +19,16 @@ const CarDetailView: React.FC = () => {
     color: string;
   } | null>(null);
 
+  // useEffect hook to fetch car details when the component mounts or 'id' changes
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         if (id) {
+          // Using the viewCar function to get details of the car with the given 'id'
           const car = viewCar(id);
 
           if (car) {
+            // Updating the state with the fetched car details
             setCarDetails({
               name: car.name,
               model: car.model,
@@ -39,13 +47,16 @@ const CarDetailView: React.FC = () => {
       }
     };
 
+    // Calling the fetchCarDetails function when the component mounts or 'id' changes
     fetchCarDetails();
   }, [id, viewCar]);
 
+  // If carDetails is null, display 'Not Found'
   if (!carDetails) {
     return <div>Not Found</div>;
   }
 
+  // Rendering the car details in a styled div
   return (
     <div
       className="car-details-card"
