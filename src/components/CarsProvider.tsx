@@ -17,7 +17,7 @@ interface CarContextProps {
   addCar: (car:Car) => void;
   updateCar:(updatedCar: Car) => Car |void;
   viewCar:(carId:string) =>Car | void;
-
+  getCar: (carName: string) => Car | undefined;
 }
 
 // Context object creation for CarProvider
@@ -49,6 +49,13 @@ export const CarProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       return car;
     }
   };
+  const getCar = (carName: string) => {
+    const car = cars.find((car) => car.name === carName);
+    if (car) {
+      console.log(`Viewing details for car with Name ${car.name}:`, car);
+      return car;
+    }
+  };
 
   // Function to generate a random car object
   const generateRandomCar = (): Car => {
@@ -77,7 +84,7 @@ export const CarProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
 // Provider component of CarContext is provided value
-  return <CarContext.Provider value={{cars,addCar,deleteCar,updateCar,viewCar}}>{children}</CarContext.Provider>;
+  return <CarContext.Provider value={{cars,addCar,deleteCar,updateCar,viewCar,getCar}}>{children}</CarContext.Provider>;
 };
 // Custom hook to use the CarContext
 export const useCars = (): CarContextProps => {

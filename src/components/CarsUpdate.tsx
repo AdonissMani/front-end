@@ -6,6 +6,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import '../styles/CarsList.css';
 import { Car } from './CarsProvider'; 
 import { useNavigate } from "react-router-dom";
+import { TextField, Button, Typography, Grid, Paper, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface CarFormInput {
   name: string;
@@ -17,17 +19,24 @@ interface CarFormInput {
 
 const CarDetailView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { viewCar, updateCar } = useCars();
+  const { viewCar, updateCar ,deleteCar} = useCars();
   const [carDetails, setCarDetails] = useState<CarFormInput | null>(null);
-  const { register, handleSubmit, setValue } = useForm<CarFormInput>();
+  const { register, handleSubmit, setValue } = useForm<CarFormInput>(); 
   const navigate = useNavigate();
 
+  const delay = (milliseconds: number | undefined) => {
+    return new Promise((resolve) => {
+      console.log("delay for 1000ms")
+      setTimeout(resolve, milliseconds);
+    });
+  };
 
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
+
         if (id) {
-          const car = await viewCar(id);
+          const car = viewCar(id);
 
           if (car) {
             setCarDetails({
@@ -59,13 +68,14 @@ const CarDetailView: React.FC = () => {
   }, [id, viewCar, setValue]);
 
   const onSubmit: SubmitHandler<CarFormInput> = async (data) => {
+
     try {
       const updatedCar: Car = {
         id: id || '',
         ...data,
         yearOfRelease: parseInt(data.yearOfRelease, 10),
       };
-
+      await delay(1000);
       // Update car details
       updateCar(updatedCar);
       navigate(`/cars`);
@@ -80,45 +90,68 @@ const CarDetailView: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+
+
   return (
-    <div
-      className="car-details-card"
-      style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 1000,
-        backgroundColor: '#1976d2',
-        // Adjust the zIndex as needed
-      }}
-      
-    >
-      <h2>{`Edit Car Details ${id}`}</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Name:</label>
-          <input {...register('name')} defaultValue={carDetails.name} />
-        </div>
-        <div>
-          <label>Model:</label>
-          <input {...register('model')} defaultValue={carDetails.model} />
-        </div>
-        <div>
-          <label>Year of Release:</label>
-          <input {...register('yearOfRelease')} defaultValue={carDetails.yearOfRelease} />
-        </div>
-        <div>
-          <label>Brand:</label>
-          <input {...register('brand')} defaultValue={carDetails.brand} />
-        </div>
-        <div>
-          <label>Color:</label>
-          <input {...register('color')} defaultValue={carDetails.color} />
-        </div>
-        <button type="submit">Update Car Details</button>
-      </form>
-    </div>
+    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+    <Grid item xs={10} sm={8} md={6} lg={4}>
+      <Paper elevation={3} style={{ padding: '25px' }}>
+        <h2>{`Editing Car`}</h2>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+
+              <TextField 
+              label="Name"
+              {...register('name')} 
+              margin="normal"
+              defaultValue={carDetails.name} fullWidth />
+
+              <TextField 
+              label="Model" 
+              {...register('model')} 
+              defaultValue={carDetails.model}
+              margin="normal"
+                fullWidth />
+
+              <TextField
+                label="Year of Release"
+                {...register('yearOfRelease')}
+                defaultValue={carDetails.yearOfRelease}
+                margin="normal"
+                fullWidth
+              />
+
+              <TextField 
+              label="Brand" 
+              {...register('brand')} 
+              defaultValue={carDetails.brand}
+              margin="normal" 
+              fullWidth />
+
+              <TextField 
+              label="Color" 
+              {...register('color')} 
+              defaultValue={carDetails.color} 
+              margin="normal"
+              fullWidth />
+
+          <Button type="submit" variant="contained" color="primary" style={{ marginTop: '-1px' }}>
+            Update
+          </Button>
+          <IconButton
+            onClick={() => {
+              deleteCar(id!)
+              navigate('/cars');
+            }}
+            color="error"
+            
+          >
+            <DeleteIcon/>
+          </IconButton>
+        </form>
+      </Paper>
+    </Grid>
+  </Grid>
   );
 };
 

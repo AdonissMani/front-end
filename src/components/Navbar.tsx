@@ -13,13 +13,8 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
-import { CarProvider } from './CarsProvider';
-import { TrucksProvider } from './TrucksProvider';
-import CarsList from './CarsList';
-import TrucksList from './TrucksList';
-import CarsCreate from './CarsCreate';
-import CarsUpdate from './CarsUpdate';
-import CarsDetailView from './CarDetailView';
+import { Clear as ClearIcon } from '@mui/icons-material';
+
 
 export interface NavbarProps {}
 
@@ -67,7 +62,9 @@ export function Navbar(props: NavbarProps) {
             </ListItemButton>
           </List>
           <div>
-            <Button onClick={toggleDrawer(false)}>Close Drawer</Button>
+            <IconButton onClick={toggleDrawer(false)} color='error'>
+              <ClearIcon />
+              </IconButton>
           </div>
         </Drawer>
       </Box>

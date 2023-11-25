@@ -1,10 +1,13 @@
 // TrucksList.tsx
 import React from 'react';
 import { useTrucksContext } from './TrucksProvider';
-import { DataGrid, GridColDef ,GridCellParams} from '@mui/x-data-grid';
+import { DataGrid, GridColDef ,GridCellParams, GridRowParams} from '@mui/x-data-grid';
 import { Permit } from './TrucksProvider';
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 const TrucksList: React.FC = () => {
 
   const { trucks,addTruck,updateTruck,deleteTruck,viewTruck } = useTrucksContext();
@@ -21,10 +24,6 @@ const TrucksList: React.FC = () => {
   const handleDelete = (truckId:string) =>{
     deleteTruck(truckId);
     console.log("i am handleDelete");
-  }
-  const handleView = (truckId:string) =>{
-    navigate(`/trucks/view/${truckId}`);
-    console.log("i am handleView");
   }
 
   const columns: GridColDef[] = [
@@ -44,41 +43,36 @@ const TrucksList: React.FC = () => {
       width: 300,
       renderCell: (params: GridCellParams) => (
         <>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: 'Green', color: '#fff', margin: '5px' }}
-            onClick={() =>
-              handleView(
-                params.row.id
-              )
-            }
-          >
-            View
-          </Button>
 
-          <Button variant="outlined" onClick={() => handleUpdate(
-                            params.row.id
-            )} style={{ margin: '5px' }}>
-            Update
-          </Button>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: 'Red', color: '#fff', margin: '5px' }}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton aria-label="edit" onClick={() => handleUpdate(params.row.id)}>
+              <EditIcon />
+            </IconButton>
+          </div>
+
+
+          <IconButton
+            aria-label="delete"
             onClick={() => handleDelete(params.row.id)}
+            color='error'
           >
-            Del
-          </Button>
+            <DeleteIcon/>
+          </IconButton>
         </>
       ),
     },
   ];
+
+  const handleRowDoubleClick = (params: GridRowParams) => {
+    handleUpdate(params.row.id);
+  };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <Button variant="contained" color="primary" onClick={handleAdd} style={{ margin: '10px' }}>
         Add Truck
       </Button>
-      <DataGrid rows={trucks} columns={columns}/>
+      <DataGrid rows={trucks} columns={columns} onRowDoubleClick={handleRowDoubleClick}/>
     </div>
   );
 };

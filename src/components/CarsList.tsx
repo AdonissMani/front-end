@@ -1,9 +1,11 @@
 import React from 'react';
-import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
+import { DataGrid, GridCellParams, GridColDef,GridRowParams } from '@mui/x-data-grid';
+import { Button ,IconButton} from '@mui/material';
 import { useCars } from './CarsProvider';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CarsList.css';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const CarsList: React.FC = () => {
   const { cars, deleteCar, updateCar,viewCar } = useCars();
@@ -14,7 +16,7 @@ const CarsList: React.FC = () => {
     console.log('Add button clicked');
   };
 
-  const handleUpdate = (carId: string, name: string, model: string, yearOfRelease: string, brand: string, color: string) => {
+  const handleUpdate = (carId: string) => {
     console.log("i am in handleUpdate");
     const carToUpdate = cars.find((car) => car.id === carId);
 
@@ -49,44 +51,33 @@ const CarsList: React.FC = () => {
       width: 300,
       renderCell: (params: GridCellParams) => (
         <>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: 'Green', color: '#fff', margin: '5px' }}
-            onClick={() =>
-              handleView(params.row.id)
-            }
-          >
-            View
-          </Button>
-
-          <Button variant="outlined" onClick={() => handleUpdate(
-                            params.row.id,
-                            params.row.name,
-                            params.row.model,
-                            params.row.yearOfRelease,
-                            params.row.brand,
-                            params.row.color
-            )} style={{ margin: '5px' }}>
-            Update
-          </Button>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: 'Red', color: '#fff', margin: '5px' }}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton aria-label="edit" onClick={() => handleUpdate(params.row.id)}>
+              <EditIcon />
+            </IconButton>
+          </div>
+          <IconButton
             onClick={() => handleDelete(params.row.id)}
+            color="error"
           >
-            Del
-          </Button>
+            <DeleteIcon/>
+          </IconButton>
         </>
       ),
     },
   ];
 
+  const handleRowDoubleClick = (params: GridRowParams, event: React.MouseEvent) => {
+    handleView(params.row.id);
+  };
+
   return (
+    
     <div style={{ height: 400, width: '100%', color: 'black' }}>
       <Button variant="contained" color="primary" onClick={handleAdd} style={{ margin: '10px' }}>
         Add Car
       </Button>
-      <DataGrid rows={cars} columns={columns} />
+      <DataGrid rows={cars} columns={columns} onRowDoubleClick={handleRowDoubleClick}/>
     </div>
   );
 };

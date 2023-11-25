@@ -18,7 +18,7 @@ interface IFormInput {
 const CarsCreate: React.FC = () => {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm<IFormInput>();
   const navigate = useNavigate();
-  const { addCar } = useCars();
+  const { addCar,getCar } = useCars();
 
   const onSubmit = (data: IFormInput) => {
     addCar({
@@ -31,6 +31,17 @@ const CarsCreate: React.FC = () => {
     });
     navigate(`/cars`);
   }
+  const isNameUnique = (name: string) => {
+    const car = getCar(name);
+    if(car) return false;
+    else return true;
+  };
+
+  const customValidations = {
+    greaterThan2000: (value: number) => value > 2000 || "Year of Release should be greater than 2000",
+    uniqueName: (name: string) => isNameUnique(name) || "Name must be unique",
+    maxLength: (value: string) => value.length <= 10 || "Maximum length exceeded (100 characters)",
+  };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
@@ -40,16 +51,23 @@ const CarsCreate: React.FC = () => {
           <TextField
             fullWidth
             label="Name"
-            {...register('Name', { required: true, maxLength: 10 })}
+            {...register('Name', { required: true, validate:{isNameUnique:customValidations.uniqueName,
+                                                              maxLength:customValidations.maxLength} })}
             error={!!errors.Name}
-            helperText={errors.Name?.type === 'required' ? 'This field is required' : 'Name cannot exceed 10 characters'}
+            helperText={
+              errors.Name?.type === 'isNameUnique'
+              ? 'Not a unique name'
+              : errors.Name?.type === 'required'
+              ? 'This field is required'
+              : 'Name cannot exceed 10 characters'
+            }
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
           <TextField
             fullWidth
             label="Model"
-            {...register('Model', { required: true, maxLength: 10 })}
+            {...register('Model', { required: true,validate:{maxLength:customValidations.maxLength} })}
             error={!!errors.Model}
             helperText={errors.Model?.type === 'required' ? 'This field is required' : 'Model cannot exceed 10 characters'}
           />
@@ -59,7 +77,7 @@ const CarsCreate: React.FC = () => {
             fullWidth
             label="Year of Release"
             type="number"
-            {...register('YearOfRelease', { required: true, min: 2000 })}
+            {...register('YearOfRelease', { required: true,validate:{minYear:customValidations.greaterThan2000}})}
             error={!!errors.YearOfRelease}
             helperText={errors.YearOfRelease?.type === 'required' ? 'This field is required' : 'Year of Release should be greater than 2000'}
           />
@@ -68,7 +86,7 @@ const CarsCreate: React.FC = () => {
           <TextField
             fullWidth
             label="Brand"
-            {...register('Brand', { required: true, maxLength: 10 })}
+            {...register('Brand', { required: true,validate:{maxLength:customValidations.maxLength}})}
             error={!!errors.Brand}
             helperText={errors.Brand?.type === 'required' ? 'This field is required' : 'Brand cannot exceed 10 characters'}
           />
@@ -77,12 +95,12 @@ const CarsCreate: React.FC = () => {
           <TextField
             fullWidth
             label="Color"
-            {...register('Color', { required: true, maxLength: 10 })}
+            {...register('Color', { required: true,validate:{maxLength:customValidations.maxLength}})}
             error={!!errors.Color}
             helperText={errors.Color?.type === 'required' ? 'This field is required' : 'Color cannot exceed 10 characters'}
           />
         </div>
-        <Button type="submit" variant="contained" disabled={!isValid} startIcon={<AddIcon />} style={{ background: '#1976d2' }}>
+        <Button type="submit" variant="contained" /*disabled={!isValid}*/ startIcon={<AddIcon />} style={{ background: '#1976d2' }}>
           Submit
         </Button>
       </form>

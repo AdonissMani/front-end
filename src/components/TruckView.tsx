@@ -54,37 +54,43 @@ const TruckView: React.FC = () => {
 
   return (
     <div>
-      {truckDetail && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650, border:0}} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ border:1, backgroundColor:'#bdbdbd'}}>Name&nbsp;</TableCell>
-                <TableCell sx={{ border:1, backgroundColor:'#bdbdbd'}} align="right">Model&nbsp;</TableCell>
-                <TableCell sx={{ border:1, backgroundColor:'#bdbdbd'}} align="right">Year of Release&nbsp;</TableCell>
-                <TableCell sx={{ border:1, backgroundColor:'#bdbdbd'}} align="right">Brand&nbsp;</TableCell>
-                <TableCell sx={{ border:1, backgroundColor:'#bdbdbd'}} align="right">Permits&nbsp;</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow
-                key={truckDetail.name}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {truckDetail.name}
-                </TableCell>
-                <TableCell align="right">{truckDetail.model}</TableCell>
-                <TableCell align="right">{truckDetail.yearOfRelease}</TableCell>
-                <TableCell align="right">{truckDetail.brand}</TableCell>
-                <TableCell align="right">{truckDetail.permits.map(permit => permit.state).join(', ')}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </div>
-  );
+    {truckDetail && (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650, border: 0 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ border: 1, backgroundColor: '#bdbdbd' }}>Name&nbsp;</TableCell>
+              <TableCell sx={{ border: 1, backgroundColor: '#bdbdbd' }} align="right">Model&nbsp;</TableCell>
+              <TableCell sx={{ border: 1, backgroundColor: '#bdbdbd' }} align="right">Year of Release&nbsp;</TableCell>
+              <TableCell sx={{ border: 1, backgroundColor: '#bdbdbd' }} align="right">Brand&nbsp;</TableCell>
+              <TableCell sx={{ border: 1, backgroundColor: '#bdbdbd' }} align="right">Permits&nbsp;</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow
+              key={truckDetail.name}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {truckDetail.name}
+              </TableCell>
+              <TableCell align="right">{truckDetail.model}</TableCell>
+              <TableCell align="right">{truckDetail.yearOfRelease}</TableCell>
+              <TableCell align="right">{truckDetail.brand}</TableCell>
+              <TableCell align="right">
+                {truckDetail.permits.map((permit, permitIndex) => (
+                  <div key={permitIndex}>
+                    {`Permit ${permit.permit_no}: ${permit.state}`}
+                  </div>
+                ))}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    )}
+  </div>
+);
 };
 
 export default TruckView;

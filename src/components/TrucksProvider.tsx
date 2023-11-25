@@ -3,7 +3,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Permit {
-  permit_no: number;
+  permit_no: string;
   state: string;
 }
 
@@ -44,11 +44,10 @@ export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const viewTruck = (truckId: string) => {
     const truck = trucks.find((truck) => truck.id === truckId);
-    if(truck){
-      console.log(`Viewing Truck detail for ID ${truck.id}:`,truck);
+    if (truck) {
+      console.log(`Viewing Truck detail for ID ${truck.id}:`, truck);
       return truck;
     }
-
   };
 
   const generateRandomPermit = (): Permit => {
@@ -56,7 +55,7 @@ export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const getRandomElement = (array: string[]) => array[Math.floor(Math.random() * array.length)];
 
     return {
-      permit_no: Math.floor(Math.random() * 1000),
+      permit_no: Math.floor(Math.random() * 1000).toString(),
       state: getRandomElement(state),
     };
   };
@@ -92,7 +91,7 @@ export const TrucksProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   );
 };
 
-export const useTrucksContext = ():TrucksContextType => {
+export const useTrucksContext = (): TrucksContextType => {
   const context = useContext(TrucksContext);
   if (!context) {
     throw new Error('useTrucksContext must be used within a TrucksProvider');

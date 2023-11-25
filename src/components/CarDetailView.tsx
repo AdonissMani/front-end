@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCars } from './CarsProvider';
 import '../styles/CarsList.css';
+import { Grid, Paper, Typography } from '@mui/material';
 
 const CarDetailView: React.FC = () => {
   // Extracting the 'id' parameter from the URL using useParams
@@ -49,52 +50,60 @@ const CarDetailView: React.FC = () => {
 
     // Calling the fetchCarDetails function when the component mounts or 'id' changes
     fetchCarDetails();
-  }, [id, viewCar]);
+  }, [id, viewCar]/*dependencies their change will execute useEffect to re run*/);
 
   // If carDetails is null, display 'Not Found'
   if (!carDetails) {
     return <div>Not Found</div>;
   }
 
-  // Rendering the car details in a styled div
+
   return (
-    <div
-      className="car-details-card"
-      style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 1000,
-        backgroundColor: '#1976d2',
-      }}
-    >
-      <h2>{`Car Details ${id}`}</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Name:</td>
-            <td>{carDetails.name}</td>
-          </tr>
-          <tr>
-            <td>Model:</td>
-            <td>{carDetails.model}</td>
-          </tr>
-          <tr>
-            <td>Year of Release:</td>
-            <td>{carDetails.yearOfRelease}</td>
-          </tr>
-          <tr>
-            <td>Brand:</td>
-            <td>{carDetails.brand}</td>
-          </tr>
-          <tr>
-            <td>Color:</td>
-            <td>{carDetails.color}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Paper
+    className="car-details-card"
+    style={{
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      zIndex: 1000,
+      padding: '20px',
+    }}
+  >
+    <Typography variant="h5">{`Car Details `}</Typography>
+    <Grid container spacing={2} style={{ marginTop: '20px' }}>
+      <Grid item xs={6}>
+        <Typography>Name:</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>{carDetails.name}</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>Model:</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>{carDetails.model}</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>Year of Release:</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>{carDetails.yearOfRelease}</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>Brand:</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>{carDetails.brand}</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>Color:</Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <Typography>{carDetails.color}</Typography>
+      </Grid>
+    </Grid>
+  </Paper>
   );
 };
 
