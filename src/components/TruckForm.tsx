@@ -43,9 +43,9 @@ const TruckForm: React.FC<TruckFormProps> = ({ isUpdate }) => {
 
   const initializeForm = async () => {
     if (isUpdate && id) {
-      await delay(1000);
       const truckData = viewTruck(id);
       if (truckData) {
+        
         Object.keys(truckData).forEach((key) => {
           setValue(key as keyof Truck, truckData[key as keyof Truck]);
         });
@@ -143,17 +143,25 @@ const TruckForm: React.FC<TruckFormProps> = ({ isUpdate }) => {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                       <TextField
                         label={`Permit Number ${permitIndex + 1}`}
-                        {...register(`permits.${permitIndex}.permit_no`, { required: true, maxLength:15, minLength:15})}
+                        {...register(`permits.${permitIndex}.permit_no`, {
+                          required: true,
+                          maxLength: { value: 15, message: 'Permit length should be 15' },
+                          minLength: { value: 15, message: 'Permit length should be 15' },
+                        })}
                         fullWidth
                         margin="normal"
+                        error={!!errors?.permits?.[permitIndex]?.permit_no}
+                        helperText={errors?.permits?.[permitIndex]?.permit_no?.message || ''}
                       />
+
                       <TextField
                         label={`State ${permitIndex + 1}`}
                         {...register(`permits.${permitIndex}.state`, { required: true })}
                         fullWidth
                         margin="normal"
-                      />
-
+                        error={!!errors.permits?.[permitIndex]?.state}
+                        helperText={errors?.permits?.[permitIndex]?.state?.message || ''}
+                        />
 
                         <IconButton color='error' aria-label="delete" onClick={()=>remove(permitIndex)}>
                             <DeleteIcon />

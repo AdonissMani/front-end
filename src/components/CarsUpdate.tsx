@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import '../styles/CarsList.css';
 import { Car } from './CarsProvider'; 
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Typography, Grid, Paper, IconButton } from '@mui/material';
+import { TextField, Button, Grid, Paper, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface CarFormInput {
@@ -75,7 +75,6 @@ const CarDetailView: React.FC = () => {
         ...data,
         yearOfRelease: parseInt(data.yearOfRelease, 10),
       };
-      await delay(1000);
       // Update car details
       updateCar(updatedCar);
       navigate(`/cars`);
